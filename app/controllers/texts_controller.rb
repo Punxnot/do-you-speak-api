@@ -1,5 +1,5 @@
 class TextsController < ApplicationController
-  before_action :require_editor, only: [:new, :create, :destroy, :edit, :update]
+  before_action :authenticate_request, only: [:update, :destroy]
 
   def all_texts
     @texts = Text.all
@@ -11,6 +11,19 @@ class TextsController < ApplicationController
     @text = Text.find(params[:id])
 
     render json: @text
+  end
+
+  def create
+    @text = Text.new(text_params)
+
+    if @text.save
+      render json: @text
+    else
+      render json: {
+        error: @event.errors.full_messages,
+        status: 400
+      }, status: 400
+    end
   end
 
   def update
@@ -88,14 +101,6 @@ class TextsController < ApplicationController
     end
 
     render json: @texts
-  end
-
-  protected
-
-  def authenticate
-    authenticate_or_request_with_http_basic do |username, password|
-      username == USER_ID && password == PASSWORD
-    end
   end
 
   private
