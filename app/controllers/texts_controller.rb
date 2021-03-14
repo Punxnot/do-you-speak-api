@@ -10,7 +10,7 @@ class TextsController < ApplicationController
   def show
     @text = Text.find(params[:id])
 
-    render json: @text
+    render json: @text, include: :audio
   end
 
   def create
@@ -62,7 +62,7 @@ class TextsController < ApplicationController
       end
     end
 
-    render json: @texts
+    render json: @texts, include: :audio, methods: :audio_url
   end
 
   def level_2
@@ -106,6 +106,6 @@ class TextsController < ApplicationController
   private
 
   def text_params
-    params.require(:text).permit(:title, :author, :text, :audio, :level, :duration)
+    params.require(:text).permit(:title, :author, :text, :level, :duration, audio_attributes: [:audio_file])
   end
 end

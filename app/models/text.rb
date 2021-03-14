@@ -1,5 +1,6 @@
 class Text < ApplicationRecord
-  has_many :comments, as: :commentable, dependent: :destroy
+  has_one :audio, dependent: :destroy
+  accepts_nested_attributes_for :audio
 
   def self.sort_by_duration(array, type)
     if type == "asc"
@@ -14,6 +15,14 @@ class Text < ApplicationRecord
       array.sort { |x, y| x.created_at <=> y.created_at }
     else
       array.sort { |x, y| y.created_at <=> x.created_at }
+    end
+  end
+
+  def audio_url
+    if self.audio&.audio_file&.attached?
+      Rails.application.routes.url_helpers.rails_blob_path(self.audio.audio_file, only_path: true)
+    else
+      nil
     end
   end
 end

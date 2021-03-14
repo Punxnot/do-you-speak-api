@@ -7,4 +7,6 @@ Rails.application.routes.draw do
   post 'api/create-text', controller: 'texts', action: 'create'
 
   post 'authenticate', to: 'authentication#authenticate'
+
+  get 'api/texts/:id', controller: 'texts', action: 'show'
 end
