@@ -1,5 +1,5 @@
 class TextsController < ApplicationController
-  before_action :authenticate_request, only: [:update, :destroy]
+  before_action :authenticate_request, only: [:create, :update, :destroy]
 
   def all_texts
     @texts = Text.all
@@ -10,7 +10,7 @@ class TextsController < ApplicationController
   def show
     @text = Text.find(params[:id])
 
-    render json: @text, include: :audio
+    render json: @text, include: :audio, methods: :audio_url
   end
 
   def create
@@ -44,6 +44,19 @@ class TextsController < ApplicationController
     @text.destroy
 
     render json: {}
+  end
+
+  def add_audio
+    @text = Text.find(params[:id])
+    @text.build(audio_file: params[:audio_file])
+    if @text.save
+      render json: @text
+    else
+      render json: {
+        error: @event.errors.full_messages,
+        status: 400
+      }, status: 400
+    end
   end
 
   def level_1

@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   get 'api/level3', controller: 'texts', action: 'level_3'
 
   post 'api/create-text', controller: 'texts', action: 'create'
+  post 'api/add-audio', controller: 'audios', action: 'add_audio'
 
   post 'authenticate', to: 'authentication#authenticate'
 
